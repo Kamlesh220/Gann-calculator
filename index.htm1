@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kamu99 Gann Calculator</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#b30000">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffcccc;
+      margin: 0;
+      padding: 20px;
+      color: #330000;
+    }
+    h1 {
+      text-align: center;
+      color: #800000;
+    }
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      max-width: 400px;
+      margin: auto;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #800000;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #b30000;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Kamu99 Gann Calculator</h1>
+  <div class="box">
+    <label>Enter a number:</label>
+    <input type="number" id="num" placeholder="Number">
+    <button onclick="calc()">Calculate Square</button>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    function calc(){
+      let num = document.getElementById('num').value;
+      if(num){
+        document.getElementById('result').innerText = 
+          'Square of ' + num + ' is ' + (num*num);
+      } else {
+        document.getElementById('result').innerText = 'Please enter a number';
+      }
+    }
+  </script>
+</body>
+</html>
