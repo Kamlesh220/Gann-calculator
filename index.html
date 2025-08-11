@@ -16,8 +16,9 @@
     input{width:100%;padding:10px;border:1px solid #f0caca;border-radius:8px;margin-bottom:12px;font-size:16px}
     button{width:100%;padding:12px;background:#b71c1c;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer}
     button:hover{background:#d32f2f}
-    .output{margin-top:12px;background:#fff9f9;padding:10px;border-radius:8px;border:1px solid #ffd1d1;color:#550000;min-height:40px}
-    footer{padding:12px;text-align:center;color:#550000;font-size:14px}
+    .output{margin-top:12px;background:#fff9f9;padding:10px;border-radius:8px;border:1px solid #ffd1d1;color:#550000;min-height:48px}
+    footer{padding:12px;text-align:center;color:#550000;font-size:13px}
+    .small{font-size:13px;color:#884444;margin-top:6px}
   </style>
 </head>
 <body>
@@ -26,41 +27,59 @@
   <main class="app-main">
     <div class="card" role="main">
       <label for="price">Price / Number डालो</label>
-      <input id="price" type="number" placeholder="Price या Number" />
+      <input id="price" type="number" inputmode="decimal" placeholder="उदाहरण: 1234.50" />
       <button id="calcBtn" type="button">Calculate Gann Levels</button>
-      <div id="output" class="output" aria-live="polite">यहाँ परिणाम दिखेगा</div>
+
+      <div id="output" class="output" aria-live="polite">
+        परिणाम यहाँ दिखेगा — एक संख्या डालो और "Calculate Gann Levels" दबाओ।
+      </div>
+
+      <div class="small">Example levels = 1%,2%,3%,5%,8%,13%,21% (अगर चाहिए तो मैं formula बदल दूँ)</div>
     </div>
   </main>
 
   <footer>Username: <strong>Kamu99</strong> — © 2025</footer>
 
   <script>
-    // quick sanity test — अगर यह alert दिखता है तो JS चल रहा है
-    // alert('JS loaded');   // अगर चाहो uncomment कर के test कर लो
+    // Final working logic (single-file). Editable percentages below.
+    (function(){
+      const perc = [1,2,3,5,8,13,21]; // change if you want different Gann % levels
+      const btn = document.getElementById('calcBtn');
+      const priceEl = document.getElementById('price');
+      const out = document.getElementById('output');
 
-    // अगर पुराना code अलग IDs use कर रहा था, यह सुनिश्चित करता है कि element मिल रहा है
-    const btn = document.getElementById('calcBtn');
-    const priceEl = document.getElementById('price');
-    const out = document.getElementById('output');
+      function formatNumber(x){
+        return Number(x).toLocaleString('en-IN', {maximumFractionDigits: 2});
+      }
 
-    if (!btn || !priceEl || !out) {
-      // debugging text
-      console.warn('Missing elements:', {btn: !!btn, price: !!priceEl, out: !!out});
-      if (out) out.innerText = 'Error: Required elements missing.';
-    } else {
       btn.addEventListener('click', () => {
-        const price = parseFloat(priceEl.value);
-        if (!price || price <= 0) {
-          out.innerHTML = '<span style="color:#a00">⚠ कृपया वैध Price डालो</span>';
+        const val = priceEl.value.trim();
+        const price = parseFloat(val);
+        if (!val || isNaN(price) || price <= 0) {
+          out.innerHTML = '<span style="color:#a00">⚠ कृपया वैध Price / Number डालो</span>';
           return;
         }
-        // Simple Gann-like level calculation (example)
-        const perc = [1,2,3,5,8,13,21];
-        const levels = perc.map(p => ({p, v: (price*(1 + p/100)).toFixed(2)}));
-        let html = '<strong>Gann Levels</strong><br>' + levels.map(l => l.p + '% → ' + l.v).join('<br>');
+
+        // compute levels
+        const levels = perc.map(p => {
+          const v = (price * (1 + p/100));
+          return {p, v: v.toFixed(2)};
+        });
+
+        // show results
+        let html = '<strong>Gann Levels</strong><br><br>';
+        html += '<table style="width:100%;border-collapse:collapse">';
+        html += levels.map(l => `<tr><td style="padding:6px;border-bottom:1px dashed #ffecec">${l.p}%</td><td style="padding:6px;text-align:right;border-bottom:1px dashed #ffecec"><strong>${formatNumber(l.v)}</strong></td></tr>`).join('');
+        html += '</table>';
+        html += '<div style="margin-top:8px;color:#774444;font-size:13px">Input: ' + formatNumber(price) + '</div>';
         out.innerHTML = html;
       });
-    }
+
+      // optional: enter key triggers calculate
+      priceEl.addEventListener('keyup', function(e){
+        if (e.key === 'Enter') btn.click();
+      });
+    })();
   </script>
 </body>
 </html>
