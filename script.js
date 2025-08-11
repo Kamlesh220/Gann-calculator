@@ -1,12 +1,12 @@
-function calculateSquare() {
+function calculate() {
     let num = document.getElementById("numberInput").value;
-    let resultArea = document.getElementById("result");
+    let resultElement = document.getElementById("result");
 
-    if (num === "" || isNaN(num)) {
-        resultArea.innerHTML = "⚠ कृपया एक सही संख्या डालें";
+    if (num === "") {
+        resultElement.innerHTML = "⚠️ कृपया एक संख्या दर्ज करें";
         return;
     }
 
     let square = num * num;
-    resultArea.innerHTML = `📐 ${num} का Square है: <b>${square}</b>`;
+    resultElement.innerHTML = `संख्या ${num} का वर्ग = ${square}`;
 }
