@@ -1,20 +1,66 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kamu99 Gann Calculator</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#b71c1c" />
+  <title>Kamu99 — Gann Calculator</title>
+  <style>
+    *{box-sizing:border-box}
+    body{font-family:Arial,Helvetica,sans-serif;margin:0;min-height:100vh;
+      display:flex;flex-direction:column;background:linear-gradient(180deg,#ffe6e6,#ffd6d6);color:#330;}
+    .app-header{background:#b71c1c;color:#fff;padding:14px;text-align:center}
+    .app-main{flex:1;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{background:#fff;border-radius:12px;padding:18px;max-width:420px;width:100%;box-shadow:0 8px 20px rgba(183,28,28,0.08)}
+    label{display:block;margin-bottom:8px;font-weight:700;color:#7a1515}
+    input{width:100%;padding:10px;border:1px solid #f0caca;border-radius:8px;margin-bottom:12px;font-size:16px}
+    button{width:100%;padding:12px;background:#b71c1c;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer}
+    button:hover{background:#d32f2f}
+    .output{margin-top:12px;background:#fff9f9;padding:10px;border-radius:8px;border:1px solid #ffd1d1;color:#550000;min-height:40px}
+    footer{padding:12px;text-align:center;color:#550000;font-size:14px}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Kamu99 Gann Calculator</h1>
-        <input type="number" id="numberInput" placeholder="संख्या दर्ज करें">
-        <button onclick="calculate()">गणना करें</button>
-        <p id="result"></p>
+  <header class="app-header"><h1>Kamu99 — Gann Calculator</h1></header>
+
+  <main class="app-main">
+    <div class="card" role="main">
+      <label for="price">Price / Number डालो</label>
+      <input id="price" type="number" placeholder="Price या Number" />
+      <button id="calcBtn" type="button">Calculate Gann Levels</button>
+      <div id="output" class="output" aria-live="polite">यहाँ परिणाम दिखेगा</div>
     </div>
-    <footer>© 2025 Kamu99 | All Rights Reserved</footer>
-    <script src="script.js"></script>
+  </main>
+
+  <footer>Username: <strong>Kamu99</strong> — © 2025</footer>
+
+  <script>
+    // quick sanity test — अगर यह alert दिखता है तो JS चल रहा है
+    // alert('JS loaded');   // अगर चाहो uncomment कर के test कर लो
+
+    // अगर पुराना code अलग IDs use कर रहा था, यह सुनिश्चित करता है कि element मिल रहा है
+    const btn = document.getElementById('calcBtn');
+    const priceEl = document.getElementById('price');
+    const out = document.getElementById('output');
+
+    if (!btn || !priceEl || !out) {
+      // debugging text
+      console.warn('Missing elements:', {btn: !!btn, price: !!priceEl, out: !!out});
+      if (out) out.innerText = 'Error: Required elements missing.';
+    } else {
+      btn.addEventListener('click', () => {
+        const price = parseFloat(priceEl.value);
+        if (!price || price <= 0) {
+          out.innerHTML = '<span style="color:#a00">⚠ कृपया वैध Price डालो</span>';
+          return;
+        }
+        // Simple Gann-like level calculation (example)
+        const perc = [1,2,3,5,8,13,21];
+        const levels = perc.map(p => ({p, v: (price*(1 + p/100)).toFixed(2)}));
+        let html = '<strong>Gann Levels</strong><br>' + levels.map(l => l.p + '% → ' + l.v).join('<br>');
+        out.innerHTML = html;
+      });
+    }
+  </script>
 </body>
 </html>
